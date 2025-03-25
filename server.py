@@ -58,4 +58,11 @@ def get_users():
         return jsonify({"error": f"Failed to fetch users: {str(e)}"}), 500
 
 if __name__ == "__main__":
-    app.run(debug=False, host="0.0.0.0", port=5000)
+    from gunicorn.app.wsgiapp import run
+    import os
+
+    workers = 1  # Set workers to 1 to reduce memory usage
+    threads = 2  # Limit threads for efficiency
+
+    os.environ["GUNICORN_CMD_ARGS"] = f"--workers={workers} --threads={threads} --timeout=120"
+    run()
